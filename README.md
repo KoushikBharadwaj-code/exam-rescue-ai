@@ -3,6 +3,16 @@
 **A multi-agent study workflow powered by Switch, Codex, and Telegram**  
 **Hackathon:** Flip the Switch 2026 · **Track 02:** Best Personal or Creative Workflow
 
+## 🎬 Project Demo
+
+**Watch the Exam Rescue AI demonstration:**
+
+https://youtu.be/RWqJVWk68eY
+
+The demo showcases two specialized AI agents—Study Coach and Quiz Master—collaborating through Switch and Telegram to teach K-means clustering, conduct quizzes, deliver revision lessons, and provide personalized feedback.
+
+**Hackathon Track:** Best Personal or Creative Workflow
+
 > **Project status:** The existing live Telegram workflow was demonstrated by the builder on November 7, 2026. This repository is a reproducible *configuration and documentation* package, not a hosted application. The included templates are structurally validated but have **not** been import-tested on a second Switch installation.
 
 ## The problem
