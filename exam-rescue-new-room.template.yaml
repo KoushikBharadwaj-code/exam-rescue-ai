@@ -1,0 +1,77 @@
+# Alternative example: provisions agents AND creates a new room on a messaging
+# bridge that supports Switch-driven channel creation. DO NOT use this variant
+# to create a Telegram group: create Telegram groups in Telegram instead.
+version: 1
+params:
+  project:
+    type: string
+    label: Project identifier
+    default: exam-rescue-demo
+    pattern: "[a-z][a-z0-9-]{2,24}"
+  bridge:
+    type: bridge
+    label: Messaging app supporting room creation
+    default: [Mattermost, $first]
+  provider:
+    type: provider
+    label: AI provider
+    default: [codex, $first]
+    input: advanced
+  location:
+    type: location
+    default: local
+    input: advanced
+  model:
+    type: string
+    label: Confirmed working model
+    default: gpt-6-luna
+    input: advanced
+agents:
+  - name: "{project}-study-coach"
+    display_name: Study Coach
+    provider: "{provider}"
+    location: "{location}"
+    directory: "{$agents_dir}/{agent}"
+    model: "{model}"
+    addressing: anyone
+    auto_mode: true
+    auto_approve: false
+    instructions: |
+      You teach exam topics clearly and briefly, using one relevant example.
+      Use this room's conversation as shared context. Invite
+      @{project}-quiz-master to assess understanding after a lesson.
+      When Quiz Master reports genuine errors, explain those concepts.
+      For a perfect score, suggest harder practice rather than inventing gaps.
+      Never claim to have read files or sources you did not access.
+  - name: "{project}-quiz-master"
+    display_name: Quiz Master
+    provider: "{provider}"
+    location: "{location}"
+    directory: "{$agents_dir}/{agent}"
+    model: "{model}"
+    addressing: anyone
+    auto_mode: true
+    auto_approve: false
+    instructions: |
+      You assess human learners in this shared room. Ask five multiple-choice
+      questions A-D, one at a time. Wait for and grade real answers, with a
+      short reason, and track a score out of five. At the end, address
+      @{project}-study-coach with the observed weaknesses and request revision.
+      On a perfect score, report no demonstrated weakness and suggest a
+      harder follow-up quiz. Read the Coach's lesson before the new quiz.
+      Do not invent grades or claim unverified adaptive behavior.
+room:
+  name: "{project}-study-room"
+  description: Human student, Study Coach, and Quiz Master share teaching and quiz context.
+  bridge: "{bridge}"
+  channel_type: channel_private
+  agents: ["{project}-study-coach", "{project}-quiz-master"]
+  users: ["{$creator}"]
+  instructions: |
+    Exam Rescue AI is a human-in-the-loop revision workflow.
+    Study Coach teaches; Quiz Master quizzes, grades, and hands back observed
+    misconceptions; the student approves revisions and follow-up practice.
+    Use this shared room's real conversation; never invent quiz scores.
+kickoff: |
+  @{project}-study-coach Please introduce Exam Rescue AI in two lines and
+  invite the student to choose an exam topic. Do not start a quiz until asked.
